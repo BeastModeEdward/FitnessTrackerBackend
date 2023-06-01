@@ -6,10 +6,10 @@ async function dropTables() {
   console.log("Dropping All Tables...")
   // drop all tables, in the correct order
   await client.query(`
-  DROP TABLE IF EXISTS users,
-  DROP TABLE IF EXISTS activities,
-  DROP TABLE IF EXISTS routines,
-  DROP TABLE IF EXISTS routineActivities
+  DROP TABLE IF EXISTS users;
+  DROP TABLE IF EXISTS activities;
+  DROP TABLE IF EXISTS routines;
+  DROP TABLE IF EXISTS routineActivities;
   `)
 }
 
@@ -23,7 +23,7 @@ async function createTables() {
   password VARCHAR(255) NOT NULL,
    );
    
-  CREATE TABLE activities
+  CREATE TABLE activities(
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     desription TEXT NOT NULL,
