@@ -1,24 +1,23 @@
 const client = require("./client");
-const bcrypt = require("bcrypt");
-const SALT_COUNT = 10; //test
+const bcrypt = require("bcrypt")
+=======
+const SALT_COUNT = 10;
+
+>>>>>>> 3ed7b1a1256eef43ad7b2e31599a385c26bb9fe8
 // database functions
 
 // user functions
 async function createUser({ username, password }) {
   const hashedPassword = bcrypt.hash(password, SALT_COUNT);
-
+  
   try {
     const {
       row: [user],
-    } = await client.query(
-      `
-    INSERT INTO users(username, password)
-    VALUES ($1,$2)
+    } = await client.query(`
+    INSERT INTO users(username, password) VALUES ($1,$2)
     ON CONFLICT (username) DO NOTHING
     RETURNING id ,username
-    ;`,
-      [username, hashedPassword]
-    );
+    `, [username, hashedPassword]);
     return user;
   } catch (error) {
     throw error;
@@ -26,12 +25,11 @@ async function createUser({ username, password }) {
 }
 
 async function getUser({ username, password }) {
-  try{
-    const {row: [user]} = await client.query(`
-    SELECT username, password
-    FROM users
-  `)
-  return user
+
+
+  if (!username || !password) {
+    return;
+3ed7b1a1256eef43ad7b2e31599a385c26bb9fe8
   }
 }
 
