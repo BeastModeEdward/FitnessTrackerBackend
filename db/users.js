@@ -23,7 +23,9 @@ async function createUser({ username, password }) {
 }
 
 async function getUser({ username, password }) {
- 
+  if (!username || !password) {
+    return;
+  }
 }
 
 async function getUserById(userId) {}
