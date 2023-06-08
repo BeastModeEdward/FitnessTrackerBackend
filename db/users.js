@@ -20,8 +20,7 @@ async function createUser({ username, password }) {
     `, [username, hashedPassword]);
     return user;
   } catch (error) {
-    throw error;
-  }
+    console.error(error);  }
 }
 
   async function getUser({ username, password }) {
@@ -33,16 +32,11 @@ async function createUser({ username, password }) {
     // return the user object (without the password)
     delete user.password;
     return user;
-    } 
-    
-    else {
-        throw (error);
+    } else {
+      console.error(error);
     }
 }
 
-  if (!username || !password) {
-    return ;
-  }
 
 
 async function getUserById(userId) {
@@ -56,8 +50,7 @@ async function getUserById(userId) {
     )
     return user
   } catch(error){
-    throw(error)
-  }
+    console.error(error);  }
 }
 
 async function getUserByUsername(userName) {
@@ -71,7 +64,7 @@ async function getUserByUsername(userName) {
 
       return user;
 } catch(error){
-  throw (error)
+  console.error(error);
 }
 }
 

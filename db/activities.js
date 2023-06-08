@@ -60,12 +60,13 @@ async function getActivityByName(name) {
 // used as a helper inside db/routines.js
 async function attachActivitiesToRoutines(routines) {
   try{
-    const {rows:[activities]} = await client.query(`
+    const {rows: activities } = await client.query(`
     SELECT *
     FROM activities
     JOIN routines
-    
+    ON activities.id = routines.id
     `)
+    return activities;
   } catch(error){
     console.error(error)
   }
