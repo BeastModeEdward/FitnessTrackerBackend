@@ -1,7 +1,6 @@
 const client = require('./client');
-const { attachActivitiesToRoutines } = require('./activities')
 const { getUserByUsername } = require('./users')
-const util = require('./util');
+
 
 // database functions
 async function createActivity({ name, description }) {
