@@ -9,11 +9,11 @@ async function createActivity({ name, description }) {
   INSERT INTO activities(name, description)
   VALUES($1, $2)
   ON CONFLICT (name) DO NOTHING
-  RETURNING (name, description)
+  RETURNING *;
   `,[name, description]);
   return activity;
 } catch(error){
-  throw(error)
+  console.error(error)
 }}
 
 async function getAllActivities() {
@@ -64,7 +64,8 @@ async function attachActivitiesToRoutines(routines) {
     SELECT *
     FROM activities
     JOIN routines
-    ON activities.id = routines.id
+    ON activities.name = routines.name
+    WHERE 
     `)
     return activities;
   } catch(error){
