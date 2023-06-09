@@ -9,13 +9,12 @@ async function createActivity({ name, description }) {
   INSERT INTO activities(name, description)
   VALUES($1, $2)
   ON CONFLICT (name) DO NOTHING
-  RETURNING *;
+  RETURNING (name, description)
   `,[name, description]);
   return activity;
 } catch(error){
-  console.error(error)
-}
-}
+  throw(error)
+}}
 
 async function getAllActivities() {
   // select and return an array of all activities
@@ -23,12 +22,12 @@ async function getAllActivities() {
     const {rows: activities}= await client.query(`
     SELECT *
     FROM activities;
-    `)
+    `);
     return activities;
   } catch(error){
     console.error(error)
   }
-}
+};
 
 async function getActivityById(id) {
   try{
@@ -77,6 +76,20 @@ async function updateActivity({ id, ...fields }) {
   // don't try to update the id
   // do update the name and description
   // return the updated activity
+
+const setString=Object.keys(fields)
+  try {
+    const {rows:[activity] } = await client.query(`
+  UPDATE activities
+  SET ${setString}
+  WHERE id=${id}
+  RETURNING *
+  `,Object.values(fields))
+return activity;
+}catch(error){
+  console.error(error)
+}
+
 }
 
 module.exports = {
