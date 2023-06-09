@@ -15,25 +15,17 @@ async function createUser({ username, password }) {
     delete user.password;
     return user;
   } catch (error) {
-    console.error(error);  }
+    console.error(error);  
+  }
 }
 
   async function getUser({ username, password }) {
-    try{
-      const {rows: [user]} = await client.query(`
-    SELECT *
-    FROM users
-    VALUES($1,$2)
-    RETURNING *;
-    `,[username, password]);
-    delete user.password;
-    if(user.password === password ){
+    const user = await getUserByUsername(username);
+    if (user.password ===password){
+      delete user.password;
       return user;
     }
-} catch(error){
-  console.error(error)
-}
-}
+  }
 
 
 

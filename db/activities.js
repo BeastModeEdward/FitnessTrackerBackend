@@ -1,17 +1,16 @@
 const client = require('./client');
-const { getUserByUsername } = require('./users')
 
 
 // database functions
 async function createActivity({ name, description }) {
   // return the new activity
   try{
-  const {row: [activity]} = await client.query(`
+  const {rows: [activity]} = await client.query(`
   INSERT INTO activities(name, description)
-  VALUES ($1, $2)
+  VALUES($1, $2)
   ON CONFLICT (name) DO NOTHING
   RETURNING *;
-  `,[name, description])
+  `,[name, description]);
   return activity;
 } catch(error){
   console.error(error)
