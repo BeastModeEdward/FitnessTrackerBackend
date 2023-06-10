@@ -1,4 +1,6 @@
+const { attachActivitiesToRoutines } = require("./activities");
 const client = require("./client");
+const { getUserByUsername } = require("./users");
 
 async function createRoutine({ creatorId, isPublic, name, goal }) {
   try{
@@ -18,8 +20,8 @@ async function getRoutineById(id) {
     const {row: [routine]} = await client.query(`
     SELECT * 
     FROM routines
-    WHERE id=${id};
-    `)
+    WHERE id=$1;
+    `,[id])
     return routine;
   } catch(error){
     console.error(error);
@@ -32,7 +34,6 @@ async function getRoutinesWithoutActivities() {
     SELECT id, "creatorId", "isPublic"
     FROM routines;
     `)
-    console.log("routines ", routines)
     return routines;
   } catch(error){
     console.error(error);
@@ -41,11 +42,13 @@ async function getRoutinesWithoutActivities() {
 
 async function getAllRoutines() {
   try{
-    const {rows: routine} = await client.query(`
+    const {rows: routines} = await client.query(`
     SELECT * 
     FROM routines;
     `)
-    return routine;
+    const routineWithActivities = await attachActivitiesToRoutines(routines)
+
+    return routineWithActivities;
   } catch(error){
     console.error(error);
   }
@@ -67,11 +70,15 @@ async function getAllPublicRoutines() {
 
 async function getAllRoutinesByUser({ username }) {
   try{
-    const {rows: routines} = await client.query(`
-    SELECT *
-    FROM routines
-    JOIN users
-    `)} catch(error){
+  const {rows: routines} = await client.query(`
+  SELECT *
+  FROM routines
+  JOIN users
+  ON users.id = routines."creatorId"
+  WHERE users.username = $1
+  `,[username])
+  return routines;
+  } catch(error){
     console.error(error)
   }
 }
@@ -80,9 +87,35 @@ async function getPublicRoutinesByUser({ username }) {}
 
 async function getPublicRoutinesByActivity({ id }) {}
 
-async function updateRoutine({ id, ...fields }) {}
+async function updateRoutine({ id, ...fields }) {
+  const setString = Object.keys(fields).map(
+    (key, index) => `"${key}"=$${index + 1}`
+).join(', ')
 
-async function destroyRoutine(id) {}
+try{ const{rows:[routine]} = await client.query(`
+    UPDATE routines
+    SET ${setString}
+    WHERE id = ${id}
+    RETURNING *;
+`,Object.values(fields)); 
+return routine;
+}catch(error){
+  console.error(error)
+}
+}
+
+async function destroyRoutine(id) {
+  try{
+  const {rows:[routine]} = await client.query(`
+  DELETE FROM routines
+  WHERE id = ${id}
+  RETURNING *;
+  `)
+  return routine;
+  } catch(error){
+    console.error(error)
+  }
+}
 
 module.exports = {
   getRoutineById,
