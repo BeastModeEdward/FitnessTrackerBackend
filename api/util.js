@@ -1,9 +1,14 @@
-const requireLogin = (req, res, next) => {
+const requireUser = (req, res, next) => {
     if (!req.user) {
-        next({ message: "NOT AUTHORIZED" });
-    } else {
-        next();
+      return res.status(401).json({
+        error: "UnauthorizedError",
+        message: "You must be logged in to perform this action",
+        name: "Unauthorized",
+      });
     }
-}
-
-module.exports = { requireLogin }
+    next();
+  };
+  
+module.exports = {
+   requireUser
+};

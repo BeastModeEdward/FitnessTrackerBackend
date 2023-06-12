@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getAllRoutines, createRoutine } = require('../db');
-const { requireLogin } = require('./util');
+const { requireUser } = require('./util');
 
 // GET /api/routines
 
@@ -28,7 +28,7 @@ router.get('/', async (req, res, next) => {
 
 // POST /api/routines
 
-router.post('/', requireLogin, async (req, res, next) => {
+router.post('/', requireUser, async (req, res, next) => {
     const createRou = await createRoutine();
     
     try {
