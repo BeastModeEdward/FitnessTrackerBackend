@@ -6,4 +6,6 @@ const { rebuildDB } = require('./seedData');
 
 rebuildDB()
   .catch(console.error)
-  .finally(() => client.end());
+  .finally(() => {
+    client.end()
+    process.exit()});
