@@ -83,20 +83,20 @@ router.post('/login', async (req, res, next) => {
 
 // GET /api/users/me
 
-router.get('/me',  async (req, res, next) => {
-    const header = req.headers.authorization
+router.get('/me', async (req, res, next) => {
+    const checkToken = req.headers.authorization
 
     try {
-        if (!header) {
+        if (!checkToken) {
             res.status(401)
             res.send({
-                error: 'Token is missing',
+                error: 'TokenMissing',
                 message: 'You must be logged in to perform this action',
-                name: 'NoTokenError'
+                name: 'MissingTokenError'
             })
 
         } else {
-                const token = header.split(' ')[1];
+                const token = checkToken.split(' ')[1];
                 const decodedUser = jwt.verify(token, JWT_SECRET);
                 res.send(decodedUser);
             }
@@ -116,7 +116,7 @@ router.get('/:username/routines', async (req, res, next) => {
           getPublicRoutinesByUser({ username }),
           getAllRoutinesByUser({ username }),
         ]);
-        if (req.user && req.user.username === username) {
+        if (req.user.username === username) {
           res.send(allRoutines);
         } else {
           res.send(publicRoutines);
