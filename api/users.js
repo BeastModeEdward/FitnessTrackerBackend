@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const { getUserByUsername, getPublicRoutinesByUser, createUser, getAllRoutinesByUser } = require('../db');
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET = "notsosecret" } = process.env;
+const { JWT_SECRET = "neverTell" } = process.env;
 
 // POST /api/users/register
 router.post('/register', async (req, res, next) => {
@@ -116,7 +116,6 @@ router.get('/:username/routines', async (req, res, next) => {
           getPublicRoutinesByUser({ username }),
           getAllRoutinesByUser({ username }),
         ]);
-    
         if (req.user && req.user.username === username) {
           res.send(allRoutines);
         } else {
